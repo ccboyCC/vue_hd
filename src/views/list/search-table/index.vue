@@ -7,41 +7,23 @@
           <a-form :model="formModel" :label-col-props="{ span: 6 }" :wrapper-col-props="{ span: 18 }" label-align="left">
             <a-row :gutter="16">
               <a-col :span="8">
-                <a-form-item field="number" :label="$t('searchTable.form.number')">
-                  <a-input v-model="formModel.number" :placeholder="$t('searchTable.form.number.placeholder')" />
+                <a-form-item field="name" :label="$t('searchTable.form.dstip')">
+                  <a-input v-model="formModel.dstip" :placeholder="$t('searchTable.form.dstip.placeholder')" />
                 </a-form-item>
               </a-col>
               <a-col :span="8">
-                <a-form-item field="name" :label="$t('searchTable.form.name')">
-                  <a-input v-model="formModel.name" :placeholder="$t('searchTable.form.name.placeholder')" />
-                </a-form-item>
-              </a-col>
-              <a-col :span="8">
-                <a-form-item field="contentType" :label="$t('searchTable.form.contentType')">
-                  <a-select
-                    v-model="formModel.contentType"
-                    :options="contentTypeOptions"
-                    :placeholder="$t('searchTable.form.selectDefault')"
-                  />
+                <a-form-item field="name" :label="$t('searchTable.form.srcip')">
+                  <a-input v-model="formModel.srcip" :placeholder="$t('searchTable.form.srcip.placeholder')" />
                 </a-form-item>
               </a-col>
               <a-col :span="8">
                 <a-form-item field="filterType" :label="$t('searchTable.form.filterType')">
-                  <a-select
-                    v-model="formModel.filterType"
-                    :options="filterTypeOptions"
-                    :placeholder="$t('searchTable.form.selectDefault')"
-                  />
+                  <a-input  :placeholder="$t('searchTable.form.search.all')"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :span="8">
                 <a-form-item field="createdTime" :label="$t('searchTable.form.createdTime')">
-                  <a-range-picker v-model="formModel.createdTime" style="width: 100%" />
-                </a-form-item>
-              </a-col>
-              <a-col :span="8">
-                <a-form-item field="status" :label="$t('searchTable.form.status')">
-                  <a-select v-model="formModel.status" :options="statusOptions" :placeholder="$t('searchTable.form.selectDefault')" />
+                  <a-range-picker v-model="formModel.timestamp"  style="width: 100%" />
                 </a-form-item>
               </a-col>
             </a-row>
@@ -69,19 +51,19 @@
       <a-row style="margin-bottom: 16px">
         <a-col :span="12">
           <a-space>
-            <a-button type="primary">
+            <!-- <a-button type="primary">
               <template #icon>
                 <icon-plus />
               </template>
               {{ $t('searchTable.operation.create') }}
-            </a-button>
-            <a-upload action="/">
+            </a-button> -->
+            <!-- <a-upload action="/">
               <template #upload-button>
                 <a-button>
                   {{ $t('searchTable.operation.import') }}
                 </a-button>
               </template>
-            </a-upload>
+            </a-upload> -->
           </a-space>
         </a-col>
         <a-col :span="12" style="display: flex; align-items: center; justify-content: end">
@@ -121,6 +103,8 @@
                     </div>
                   </div>
                 </div>
+                <div>
+                </div>
               </template>
             </a-popover>
           </a-tooltip>
@@ -131,45 +115,10 @@
         :loading="loading"
         :pagination="pagination"
         :columns="cloneColumns as TableColumnData[]"
-        :data="renderData"
+        :data="renderIpData"
         :bordered="false"
         :size="size"
-        @page-change="onPageChange"
-      >
-        <template #index="{ rowIndex }">
-          {{ rowIndex + 1 + (pagination.current - 1) * pagination.pageSize }}
-        </template>
-        <template #contentType="{ record }">
-          <a-space>
-            <a-avatar v-if="record.contentType === 'img'" :size="16" shape="square">
-              <img
-                alt="avatar"
-                src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/581b17753093199839f2e327e726b157.svg~tplv-49unhts6dw-image.image"
-              />
-            </a-avatar>
-            <a-avatar v-else-if="record.contentType === 'horizontalVideo'" :size="16" shape="square">
-              <img
-                alt="avatar"
-                src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/77721e365eb2ab786c889682cbc721c1.svg~tplv-49unhts6dw-image.image"
-              />
-            </a-avatar>
-            <a-avatar v-else :size="16" shape="square">
-              <img
-                alt="avatar"
-                src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/ea8b09190046da0ea7e070d83c5d1731.svg~tplv-49unhts6dw-image.image"
-              />
-            </a-avatar>
-            {{ $t(`searchTable.form.contentType.${record.contentType}`) }}
-          </a-space>
-        </template>
-        <template #filterType="{ record }">
-          {{ $t(`searchTable.form.filterType.${record.filterType}`) }}
-        </template>
-        <template #status="{ record }">
-          <span v-if="record.status === 'offline'" class="circle"></span>
-          <span v-else class="circle pass"></span>
-          {{ $t(`searchTable.form.status.${record.status}`) }}
-        </template>
+        @page-change="onPageChange">
         <template #operations>
           <a-button v-permission="['admin']" type="text" size="small">
             {{ $t('searchTable.columns.operations.view') }}
@@ -181,36 +130,41 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, reactive, watch, nextTick } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { PolicyIpParams, PolicyIPRecord, queryIpList } from '@/api/list'
 import useLoading from '@/hooks/loading'
-import { queryPolicyList, PolicyRecord, PolicyParams } from '@/api/list'
 import { Pagination } from '@/types/global'
 import type { SelectOptionData } from '@arco-design/web-vue/es/select/interface'
 import type { TableColumnData } from '@arco-design/web-vue/es/table/interface'
 import cloneDeep from 'lodash/cloneDeep'
 import Sortable from 'sortablejs'
+import { computed, nextTick, reactive, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 type SizeProps = 'mini' | 'small' | 'medium' | 'large'
 type Column = TableColumnData & { checked?: true }
 
 const generateFormModel = () => {
   return {
-    number: '',
-    name: '',
-    contentType: '',
-    filterType: '',
-    createdTime: [],
-    status: '',
+  id: '',
+  tac: '',
+  cid: '',
+  freq: '',
+  pci: '',
+  imsi: '',
+  tmsi: '',
+  rnti: '',
+  srcip: '',
+  dstip: '',
+  timestamp: '',
+  count: '',
   }
 }
 const { loading, setLoading } = useLoading(true)
 const { t } = useI18n()
-const renderData = ref<PolicyRecord[]>([])
+const renderIpData = ref<PolicyIPRecord[]>([])
 const formModel = ref(generateFormModel())
 const cloneColumns = ref<Column[]>([])
 const showColumns = ref<Column[]>([])
-
 const size = ref<SizeProps>('medium')
 
 const basePagination: Pagination = {
@@ -241,104 +195,111 @@ const densityList = computed(() => [
 const columns = computed<TableColumnData[]>(() => [
   {
     title: t('searchTable.columns.index'),
-    dataIndex: 'index',
-    slotName: 'index',
+    dataIndex: 'id',
+    slotName: 'id',
   },
   {
-    title: t('searchTable.columns.number'),
-    dataIndex: 'number',
+    title: t('searchTable.columns.freq'),
+    dataIndex: 'freq',
   },
   {
-    title: t('searchTable.columns.name'),
-    dataIndex: 'name',
+    title: t('searchTable.columns.pci'),
+    dataIndex: 'pci',
   },
   {
-    title: t('searchTable.columns.contentType'),
-    dataIndex: 'contentType',
-    slotName: 'contentType',
+    title: t('searchTable.columns.tac'),
+    dataIndex: 'tac',
   },
   {
-    title: t('searchTable.columns.filterType'),
-    dataIndex: 'filterType',
+    title: t('searchTable.columns.tmsi'),
+    dataIndex: 'tmsi',
   },
   {
-    title: t('searchTable.columns.count'),
-    dataIndex: 'count',
+    title: t('searchTable.columns.rnti'),
+    dataIndex: 'rnti',
+  },
+  {
+    title: t('searchTable.columns.dstip'),
+    dataIndex: 'dstip',
+  },
+  {
+    title: t('searchTable.columns.srcip'),
+    dataIndex: 'srcip',
   },
   {
     title: t('searchTable.columns.createdTime'),
-    dataIndex: 'createdTime',
+    dataIndex: 'timestamp',
+    slotName: 'timestamp', 
   },
-  {
-    title: t('searchTable.columns.status'),
-    dataIndex: 'status',
-    slotName: 'status',
-  },
+
   {
     title: t('searchTable.columns.operations'),
     dataIndex: 'operations',
     slotName: 'operations',
   },
 ])
-const contentTypeOptions = computed<SelectOptionData[]>(() => [
-  {
-    label: t('searchTable.form.contentType.img'),
-    value: 'img',
-  },
-  {
-    label: t('searchTable.form.contentType.horizontalVideo'),
-    value: 'horizontalVideo',
-  },
-  {
-    label: t('searchTable.form.contentType.verticalVideo'),
-    value: 'verticalVideo',
-  },
-])
+
 const filterTypeOptions = computed<SelectOptionData[]>(() => [
   {
-    label: t('searchTable.form.filterType.artificial'),
-    value: 'artificial',
+    label: t('searchTable.form.filterType.freq'),
+    value: 'freq',
   },
   {
-    label: t('searchTable.form.filterType.rules'),
-    value: 'rules',
+    label: t('searchTable.form.filterType.pci'),
+    value: 'pci',
+  },
+  {
+    label: t('searchTable.form.filterType.tac'),
+    value: 'tac',
+  },
+  {
+    label: t('searchTable.form.filterType.tmsi'),
+    value: 'tmsi',
+  },
+  {
+    label: t('searchTable.form.filterType.rnti'),
+    value: 'rnti',
   },
 ])
-const statusOptions = computed<SelectOptionData[]>(() => [
-  {
-    label: t('searchTable.form.status.online'),
-    value: 'online',
-  },
-  {
-    label: t('searchTable.form.status.offline'),
-    value: 'offline',
-  },
-])
-const fetchData = async (params: PolicyParams = { current: 1, pageSize: 20 }) => {
+
+const fetchDataIp =async (params : PolicyIpParams={current:1,pageSize:20} )=>{
   setLoading(true)
   try {
-    const { data } = await queryPolicyList(params)
-    renderData.value = data.list
+    const  { data }  = await queryIpList(params)
+    data.forEach(item => {
+      // 对每个 item 执行操作，例如格式化时间
+      console.log("datatime",item.timestamp);
+      item.timestamp = formatDate(item.timestamp)
+    })
+    renderIpData.value = data
+    console.log(  "数据：：", renderIpData.value)
     pagination.current = params.current
-    pagination.total = data.total
+    pagination.total = data.length
   } catch (err) {
     // you can report use errorHandler or other
+    console.log(err);
   } finally {
     setLoading(false)
   }
 }
 
-const search = () => {
-  fetchData({
-    ...basePagination,
-    ...formModel.value,
-  } as unknown as PolicyParams)
-}
-const onPageChange = (current: number) => {
-  fetchData({ ...basePagination, current })
+const formatDate = (timestamp: string) => {
+  const date = new Date(timestamp)
+  return date.toLocaleString()
 }
 
-fetchData()
+const search = () => {
+  fetchDataIp({
+    ...basePagination,
+    ...formModel,
+  } as unknown as PolicyIpParams)
+}
+const onPageChange = (current: number) => {
+  fetchDataIp({ ...basePagination, current })
+}
+
+fetchDataIp()
+
 const reset = () => {
   formModel.value = generateFormModel()
 }

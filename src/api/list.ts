@@ -2,29 +2,30 @@ import type { DescData } from '@arco-design/web-vue/es/descriptions/interface'
 import axios from 'axios'
 import qs from 'query-string'
 
-export interface PolicyRecord {
-  id: string
-  number: number
-  name: string
-  contentType: 'img' | 'horizontalVideo' | 'verticalVideo'
-  filterType: 'artificial' | 'rules'
+export interface PolicyIPRecord {
+  id: number
+  tac: number
+  cid: number
+  freq: number
+  pci: number
+  imsi: number
+  tmsi: number
+  rnti: number
+  srcip: string
+  dstip: string
+  timestamp: string
   count: number
-  status: 'online' | 'offline'
-  createdTime: string
 }
 
-export interface PolicyParams extends Partial<PolicyRecord> {
+export interface PolicyIpParams extends Partial<PolicyIPRecord> {
   current: number
   pageSize: number
 }
 
-export interface PolicyListRes {
-  list: PolicyRecord[]
-  total: number
-}
 
-export function queryPolicyList(params: PolicyParams) {
-  return axios.get<PolicyListRes>('/api/list/policy', {
+export function queryIpList(params: PolicyIpParams) {
+  console.log('数据读取')
+  return axios.post<PolicyIPRecord[]>('air/searchlatest', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj)
