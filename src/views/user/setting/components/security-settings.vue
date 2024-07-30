@@ -85,7 +85,9 @@
   </a-list>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+
+</script>
 
 <style scoped lang="less">
 :deep(.arco-list-item) {

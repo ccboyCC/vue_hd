@@ -26,7 +26,15 @@ export interface PostData {
 export interface Pagination {
   current: number
   pageSize: number
-  total?: number
+  total: number
+  tac: number
+  cid: number
+  tmsi: number
+  rnti: number
+  srcip: string
+  dstip: string
+  endtime: number
+  starttime: number
 }
 
 export type TimeRanger = [string, string]

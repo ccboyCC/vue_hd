@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <div class="logo">
-      <img alt="logo" src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image" />
-      <div class="logo-text">vue-admin-arco</div>
+      <img alt="logo" src="https://zhengxin-pub.cdn.bcebos.com/logopic/2c9ba53d1fa015f94057477626002ffb_fullsize.jpg?x-bce-process=image/resize,m_lfit,w_200" />
+      <div class="logo-text">恒达安网信息技术</div>
     </div>
     <LoginBanner />
     <div class="content">
@@ -14,9 +14,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import LoginBanner from './components/banner.vue'
-import LoginForm from './components/login-form.vue'
+import { defineComponent } from 'vue';
+import LoginBanner from './components/banner.vue';
+import LoginForm from './components/login-form.vue';
 
 export default defineComponent({
   components: {

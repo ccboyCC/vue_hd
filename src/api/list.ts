@@ -2,35 +2,48 @@ import type { DescData } from '@arco-design/web-vue/es/descriptions/interface'
 import axios from 'axios'
 import qs from 'query-string'
 
-export interface PolicyIPRecord {
-  id: number
+export interface IpDataSet {
   tac: number
   cid: number
-  freq: number
-  pci: number
-  imsi: number
   tmsi: number
   rnti: number
   srcip: string
   dstip: string
-  timestamp: string
-  count: number
+  starttime: number
+  endtime: number
 }
 
-export interface PolicyIpParams extends Partial<PolicyIPRecord> {
-  current: number
+export interface allsize {
+  allsize: number
+}
+
+
+export interface PolicyIpForm {
+  pageNo: number
   pageSize: number
+  tac: number
+  cid: number
+  tmsi: number
+  rnti: number
+  srcip: string
+  dstip: string
+  starttime: number
+  endtime: number
 }
 
 
-export function queryIpList(params: PolicyIpParams) {
+
+
+
+export function queryIpList(params: PolicyIpForm) {
   console.log('数据读取')
-  return axios.post<PolicyIPRecord[]>('air/searchlatest', {
-    params,
-    paramsSerializer: (obj) => {
-      return qs.stringify(obj)
-    },
-  })
+  return axios.post('air/searchlatest', qs.stringify(params))
+}
+
+
+export function queryIpTime(params: PolicyIpForm) {
+  console.log('数据获取')
+  return axios.post('air/searchlatest', qs.stringify(params))
 }
 
 export interface ServiceRecord {

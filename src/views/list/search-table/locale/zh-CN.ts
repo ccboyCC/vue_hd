@@ -1,5 +1,5 @@
 export default {
-  'menu.list.searchTable': '查询表格',
+  'menu.list.searchTable': 'IP流量统计',
   'searchTable.form.dstip': 'dstip',
   'searchTable.form.dstip.placeholder': '请输入DSTIP',
   'searchTable.form.srcip': 'srcip',

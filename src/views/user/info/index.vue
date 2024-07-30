@@ -6,18 +6,13 @@
       <div class="content-left">
         <a-grid :cols="24" :col-gap="16" :row-gap="16">
           <a-grid-item :span="24">
-            <MyProject />
-          </a-grid-item>
-          <a-grid-item :span="24">
             <LatestActivity />
           </a-grid-item>
         </a-grid>
       </div>
       <div class="content-right">
         <a-grid :cols="24" :row-gap="16">
-          <a-grid-item :span="24">
-            <MyTeam />
-          </a-grid-item>
+     
           <a-grid-item class="panel" :span="24">
             <LatestNotification />
           </a-grid-item>
@@ -28,11 +23,9 @@
 </template>
 
 <script lang="ts" setup>
-import UserInfoHeader from './components/user-info-header.vue'
-import LatestNotification from './components/latest-notification.vue'
-import MyProject from './components/my-project.vue'
-import LatestActivity from './components/latest-activity.vue'
-import MyTeam from './components/my-team.vue'
+import LatestActivity from './components/latest-activity.vue';
+import LatestNotification from './components/latest-notification.vue';
+import UserInfoHeader from './components/user-info-header.vue';
 </script>
 
 <script lang="ts">
