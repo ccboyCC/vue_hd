@@ -3,19 +3,18 @@
     <Breadcrumb :items="['menu.dashboard', 'menu.dashboard.monitor']" />
     <div class="layout">
       <div class="layout-left-side">
-        <ChatPanel />
-      </div>
-      <div class="layout-content">
         <a-space :size="16" direction="vertical" fill>
-          <Studio />
-          <DataStatistic />
+          <ChatPanel />
         </a-space>
       </div>
+      <!-- <div class="layout-content">
+        <a-space :size="16" direction="vertical" fill>
+          <ChatPanel />
+        </a-space>
+      </div> -->
       <div class="layout-right-side">
         <a-space :size="16" direction="vertical" fill>
-          <StudioStatus />
-          <QuickOperation />
-          <StudioInformation />
+          <ChatPanelPhone />
         </a-space>
       </div>
     </div>
@@ -23,18 +22,19 @@
 </template>
 
 <script lang="ts" setup>
-import ChatPanel from './components/chat-panel.vue'
-import Studio from './components/studio.vue'
-import DataStatistic from './components/data-statistic.vue'
-import StudioStatus from './components/studio-status.vue'
-import QuickOperation from './components/quick-operation.vue'
-import StudioInformation from './components/studio-information.vue'
+import ChatPanel from "./components/chat-panel.vue";
+import ChatPanelPhone from "./components/chat-panel-phone.vue";
+import Studio from "./components/studio.vue";
+import DataStatistic from "./components/data-statistic.vue";
+import StudioStatus from "./components/studio-status.vue";
+import QuickOperation from "./components/quick-operation.vue";
+import StudioInformation from "./components/studio-information.vue";
 </script>
 
 <script lang="ts">
 export default {
-  name: 'Monitor',
-}
+  name: "Monitor",
+};
 </script>
 
 <style scoped lang="less">
@@ -46,7 +46,7 @@ export default {
   display: flex;
 
   &-left-side {
-    flex-basis: 300px;
+    flex-basis: 50%;
   }
 
   &-content {
@@ -55,7 +55,7 @@ export default {
   }
 
   &-right-side {
-    flex-basis: 280px;
+    flex-basis: 50%;
   }
 }
 </style>

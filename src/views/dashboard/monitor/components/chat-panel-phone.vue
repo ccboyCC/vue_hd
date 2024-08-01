@@ -1,7 +1,7 @@
 <template>
   <a-card
-    class="general-card chat-panel"
-    :title="$t('monitor.title.chatPanel')"
+    class="general-card chat-panel-phone"
+    :title="$t('monitor.title.phone')"
     :bordered="false"
     :header-style="{ paddingBottom: '0' }"
     :body-style="{
@@ -18,9 +18,9 @@
         </a-option>
       </a-select>
     </a-space>
-    <div class="chat-panel-content">
+    <div class="chat-panel-phone-content">
       <a-spin :loading="loading" style="width: 100%">
-        <ChatList :render-list="ipData" />
+        <ChatPhoneList :render-list="ipData" />
       </a-spin>
     </div>
   </a-card>
@@ -30,7 +30,7 @@
 import { onMounted, onUnmounted, ref } from "vue";
 import { IpDataSet, PolicyIpForm, queryIpList } from "@/api/list";
 import useLoading from "@/hooks/loading";
-import ChatList from "./chat-list.vue";
+import ChatPhoneList from "./chat-list-phone.vue";
 
 const formatDate = (timestamp: string) => {
   const date = new Date(timestamp);
@@ -40,7 +40,7 @@ const ipData = ref<IpDataSet[]>([]);
 const fetchData = async (
   params: PolicyIpForm = {
     pageNo: 1,
-    pageSize: 5,
+    pageSize: 7,
     tac: undefined,
     cid: undefined,
     tmsi: undefined,
@@ -49,11 +49,12 @@ const fetchData = async (
     dstip: undefined,
     starttime: undefined,
     endtime: undefined,
+    isphonenum: 1,
   }
 ) => {
   try {
     const { data } = await queryIpList(params);
-    console.log("card_more", data);
+    console.log("card_more_phone", data);
     data.ipDataSet.forEach((item: { timestamp: string }) => {
       // 对每个 item 执行操作，例如格式化时间
       item.timestamp = formatDate(item.timestamp);
@@ -84,7 +85,7 @@ onUnmounted(stopPolling);
 </script>
 
 <style scoped lang="less">
-.chat-panel {
+.chat-panel-phone {
   display: flex;
   flex-direction: column;
   height: 100%;

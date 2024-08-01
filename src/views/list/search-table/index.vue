@@ -29,6 +29,21 @@
               </a-col>
               <a-col :span="8">
                 <a-form-item
+                  field="name"
+                  :label="$t('searchTable.form.phonenum')"
+                >
+                  <a-space>
+                    <a-checkbox v-model="isCheckePhone"></a-checkbox>
+                    <a-input
+                      v-model="phone"
+                      :placeholder="
+                        $t('searchTable.form.phonenum.placeholder')
+                      "
+                  /></a-space>
+                </a-form-item>
+              </a-col>
+              <a-col :span="8">
+                <a-form-item
                   field="filterType"
                   :label="$t('searchTable.form.filterType')"
                 >
@@ -172,15 +187,11 @@
         :showPagination="true"
         :columns="cloneColumns as TableColumnData[]"
         :data="renderIpData"
+        :column-resizable
         :bordered="true"
         :size="size"
         @page-change="onPageChange"
       >
-        <template #operations>
-          <a-button v-permission="['admin']" type="text" size="small">
-            {{ $t("searchTable.columns.operations.view") }}
-          </a-button>
-        </template>
       </a-table>
     </a-card>
   </div>
@@ -194,15 +205,44 @@ import type { SelectOptionData } from "@arco-design/web-vue/es/select/interface"
 import type { TableColumnData } from "@arco-design/web-vue/es/table/interface";
 import cloneDeep from "lodash/cloneDeep";
 import Sortable from "sortablejs";
-import { computed, nextTick, reactive, ref, watch } from "vue";
+import {
+  computed,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  reactive,
+  ref,
+  watch,
+} from "vue";
 import { useI18n } from "vue-i18n";
 
 type SizeProps = "mini" | "small" | "medium" | "large";
 type Column = TableColumnData & { checked?: true };
 
+const isCheckePhone = ref(false);
+
+const phone = ref(null);
 const searchQueryAll = ref();
 
 const valueFind = ref("");
+
+const intervalId = ref(null);
+
+const startPolling = (interval = 1500) => {
+  intervalId.value = setInterval(() => {
+    search();
+  }, interval);
+};
+
+const stopPolling = () => {
+  if (intervalId.value) {
+    clearInterval(intervalId.value);
+    intervalId.value = null;
+  }
+};
+
+onMounted(startPolling);
+onUnmounted(stopPolling);
 
 const generateFormModel = () => {
   return {
@@ -216,6 +256,8 @@ const generateFormModel = () => {
     dstip: undefined,
     starttime: undefined,
     endtime: undefined,
+    isphonenum: 0,
+    phonenum: undefined,
   };
 };
 const { loading, setLoading } = useLoading(true);
@@ -238,6 +280,8 @@ const basePagination: Pagination = {
   dstip: undefined,
   starttime: undefined,
   endtime: undefined,
+  isphonenum: 0,
+  phonenum: undefined,
 };
 const pagination = reactive({
   ...basePagination,
@@ -262,9 +306,8 @@ const densityList = computed(() => [
 ]);
 const columns = computed<TableColumnData[]>(() => [
   {
-    title: t("searchTable.columns.index"),
-    dataIndex: "id",
-    slotName: "id",
+    title: t("searchTable.columns.phone"),
+    dataIndex: "phonenum",
   },
   {
     title: t("searchTable.columns.freq"),
@@ -277,6 +320,10 @@ const columns = computed<TableColumnData[]>(() => [
   {
     title: t("searchTable.columns.tac"),
     dataIndex: "tac",
+  },
+  {
+    title: t("searchTable.columns.cid"),
+    dataIndex: "cid",
   },
   {
     title: t("searchTable.columns.tmsi"),
@@ -297,36 +344,6 @@ const columns = computed<TableColumnData[]>(() => [
   {
     title: t("searchTable.columns.createdTime"),
     dataIndex: "timestamp",
-    slotName: "timestamp",
-  },
-
-  {
-    title: t("searchTable.columns.operations"),
-    dataIndex: "operations",
-    slotName: "operations",
-  },
-]);
-
-const filterTypeOptions = computed<SelectOptionData[]>(() => [
-  {
-    label: t("searchTable.form.filterType.freq"),
-    value: "freq",
-  },
-  {
-    label: t("searchTable.form.filterType.pci"),
-    value: "pci",
-  },
-  {
-    label: t("searchTable.form.filterType.tac"),
-    value: "tac",
-  },
-  {
-    label: t("searchTable.form.filterType.tmsi"),
-    value: "tmsi",
-  },
-  {
-    label: t("searchTable.form.filterType.rnti"),
-    value: "rnti",
   },
 ]);
 
@@ -342,13 +359,15 @@ const fetchDataIp = async (
     dstip: undefined,
     starttime: undefined,
     endtime: undefined,
+    phonenum: undefined,
+    isphonenum: undefined,
   }
 ) => {
-  setLoading(true);
+  setLoading(false);
   try {
     const { data } = await queryIpList(params);
     console.log("请求数据", data);
-    data.ipDataSet.forEach((item) => {
+    data.ipDataSet.forEach((item: { timestamp: string }) => {
       // 对每个 item 执行操作，例如格式化时间
       console.log("datatime", item.timestamp);
       item.timestamp = formatDate(item.timestamp);
@@ -375,7 +394,7 @@ const resetRangePicker = () => {
   onSelect("");
 };
 
-const onSelect = (date) => {
+const onSelect = (date: string | any[]) => {
   console.log("onSelect", date);
   if (Array.isArray(date) && date.length === 2) {
     const startDate = new Date(date[0]);
@@ -396,6 +415,7 @@ const onSelect = (date) => {
 };
 
 const search = () => {
+  console.log("选择框状态", isCheckePhone.value);
   console.log("搜索数据one", searchQueryAll.value);
   console.log("搜索数据two", formModel.value);
   console.log("搜索数据three", valueFind.value);
@@ -415,12 +435,25 @@ const search = () => {
     default:
       console.log("Unknown value type");
   }
+  if (isCheckePhone.value) {
+    formModel.value.isphonenum = 1;
+    if (phone.value != null) {
+      formModel.value.phonenum = `+86${phone.value}`;
+    }
+  } else {
+    formModel.value.isphonenum = 0;
+  }
   fetchDataIp({
     ...basePagination,
     ...formModel.value,
   } as unknown as PolicyIpForm);
 };
 const onPageChange = (pageNo: number) => {
+  if (pageNo === 1) {
+    startPolling();
+  } else {
+    stopPolling();
+  }
   fetchDataIp({
     ...basePagination,
     ...formModel.value,
@@ -431,8 +464,12 @@ const onPageChange = (pageNo: number) => {
 fetchDataIp();
 
 const reset = () => {
+  startPolling();
+  isCheckePhone.value = false;
+  phone.value = null;
   resetRangePicker();
   valueFind.value = "";
+  searchQueryAll.value = "";
   formModel.value = generateFormModel();
 };
 

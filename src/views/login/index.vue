@@ -1,9 +1,5 @@
 <template>
   <div class="container">
-    <div class="logo">
-      <img alt="logo" src="https://zhengxin-pub.cdn.bcebos.com/logopic/2c9ba53d1fa015f94057477626002ffb_fullsize.jpg?x-bce-process=image/resize,m_lfit,w_200" />
-      <div class="logo-text">恒达安网信息技术</div>
-    </div>
     <LoginBanner />
     <div class="content">
       <div class="content-inner">
@@ -14,16 +10,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import LoginBanner from './components/banner.vue';
-import LoginForm from './components/login-form.vue';
+import { defineComponent } from "vue";
+import LoginBanner from "./components/banner.vue";
+import LoginForm from "./components/login-form.vue";
 
 export default defineComponent({
   components: {
     LoginBanner,
     LoginForm,
   },
-})
+});
 </script>
 
 <style lang="less" scoped>

@@ -1,6 +1,7 @@
 export default {
   'menu.dashboard.monitor': '实时监控',
-  'monitor.title.chatPanel': '聊天窗口',
+  'monitor.title.chatPanel': 'IP信息窗口',
+  'monitor.title.phone': '手机号信息窗口',
   'monitor.title.quickOperation': '快捷操作',
   'monitor.title.studioInfo': '直播信息',
   'monitor.title.studioPreview': '直播预览',

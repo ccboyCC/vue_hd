@@ -1,19 +1,22 @@
 <template>
-  <div :class="['chat-item', itemData.isCollect ? 'chat-item-collected' : '']">
+  <div
+    :class="[
+      'chat-item-phone',
+      itemData.isCollect ? 'chat-item-phone-collected' : '',
+    ]"
+  >
     <a-space :size="4" direction="vertical" fill>
       <a-typography-text type="warning">
         {{ "手机：" }}{{ itemData.phonenum }}
       </a-typography-text>
-      <a-typography-text> {{ "tac" }} {{ itemData.tac }}</a-typography-text>
-      <a-typography-text> {{ "cid" }} {{ itemData.cid }}</a-typography-text>
-      <a-typography-text>
-        {{ "srcip：" }} {{ itemData.srcip }}</a-typography-text
-      >
-      <a-typography-text>
-        {{ "dstip：" }} {{ itemData.dstip }}</a-typography-text
-      >
-      <div class="chat-item-footer">
-        <div class="chat-item-time">
+      <a-typography-text type="warning">
+        {{ "短信:" }}{{ "" }}
+      </a-typography-text>
+      <a-typography-text type="warning">
+        {{ "语音:" }}{{ "" }}
+      </a-typography-text>
+      <div class="chat-item-phone-footer">
+        <div class="chat-item-phone-time">
           <a-typography-text type="secondary">
             {{ "时间：" }} {{ itemData.timestamp }}
           </a-typography-text>
@@ -38,7 +41,7 @@ defineProps({
 </script>
 
 <style scoped lang="less">
-.chat-item {
+.chat-item-phone {
   padding: 8px;
   font-size: 12px;
   line-height: 20px;

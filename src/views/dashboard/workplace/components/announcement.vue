@@ -6,7 +6,7 @@
     :body-style="{ padding: '15px 20px 13px 20px' }"
   >
     <template #extra>
-      <a-link>{{ $t('workplace.viewMore') }}</a-link>
+      <a-link>{{ $t("workplace.viewMore") }}</a-link>
     </template>
     <div>
       <div v-for="(item, idx) in list" :key="idx" class="item">
@@ -16,37 +16,27 @@
         </span>
       </div>
     </div>
-  </a-card>	
+  </a-card>
 </template>
 
 <script lang="ts" setup>
 const list = [
   {
-    type: 'orangered',
-    label: '活动',
-    content: '内容最新优惠活动',
+    type: "red",
+    label: "警告",
+    content: "IP异常，手机号码：10011",
   },
   {
-    type: 'cyan',
-    label: '消息',
-    content: '新增内容尚未通过审核，详情请点击查看。',
+    type: "blue",
+    label: "通知",
+    content: "有短信，手机号码：10086",
   },
   {
-    type: 'blue',
-    label: '通知',
-    content: '当前产品试用期即将结束，如需续费请点击查看。',
+    type: "cyan",
+    label: "消息",
+    content: "有语音，手机号码：10010",
   },
-  {
-    type: 'blue',
-    label: '通知',
-    content: '1月新系统升级计划通知',
-  },
-  {
-    type: 'cyan',
-    label: '消息',
-    content: '新增内容已经通过审核，详情请点击查看。',
-  },
-]
+];
 </script>
 
 <style scoped lang="less">

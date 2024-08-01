@@ -13,20 +13,20 @@ setupMock({
       if (isLogin()) {
         const role = window.localStorage.getItem('userRole') || 'admin'
         return successResponseWrap({
-          name: '王立群',
+          name: '恒达安网',
           avatar: 'https://i.gtimg.cn/club/item/face/img/2/15922_100.gif',
           email: 'wangliqun@email.com',
           job: 'frontend',
-          jobName: '前端艺术家',
+          jobName: '前端工程师',
           organization: 'Frontend',
           organizationName: '前端',
-          location: 'beijing',
-          locationName: '北京',
-          introduction: '人潇洒，性温存',
+          location: 'wuhan',
+          locationName: '武汉',
+          introduction: '',
           personalWebsite: 'https://www.arco.design',
-          phone: '150****0000',
-          registrationDate: '2013-05-10 12:10:00',
-          accountId: '15012312300',
+          phone: '',
+          registrationDate: '',
+          accountId: '',
           certification: 1,
           role,
         })
@@ -81,14 +81,6 @@ setupMock({
               name: 'Workplace',
               meta: {
                 locale: 'menu.server.workplace',
-                requiresAuth: true,
-              },
-            },
-            {
-              path: 'https://arco.design',
-              name: 'arcoWebsite',
-              meta: {
-                locale: 'menu.arcoWebsite',
                 requiresAuth: true,
               },
             },

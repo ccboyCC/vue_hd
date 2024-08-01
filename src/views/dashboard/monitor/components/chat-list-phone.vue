@@ -1,37 +1,24 @@
 <template>
-  <div :class="['chat-item', itemData.isCollect ? 'chat-item-collected' : '']">
-    <a-space :size="4" direction="vertical" fill>
-      <a-typography-text type="warning">
-        {{ "手机：" }}{{ itemData.phonenum }}
-      </a-typography-text>
-      <a-typography-text> {{ "tac" }} {{ itemData.tac }}</a-typography-text>
-      <a-typography-text> {{ "cid" }} {{ itemData.cid }}</a-typography-text>
-      <a-typography-text>
-        {{ "srcip：" }} {{ itemData.srcip }}</a-typography-text
-      >
-      <a-typography-text>
-        {{ "dstip：" }} {{ itemData.dstip }}</a-typography-text
-      >
-      <div class="chat-item-footer">
-        <div class="chat-item-time">
-          <a-typography-text type="secondary">
-            {{ "时间：" }} {{ itemData.timestamp }}
-          </a-typography-text>
-        </div>
-      </div>
-    </a-space>
+  <div class="chat-list-phone">
+    <ChatPhoneItem
+      v-for="item in renderList"
+      :key="item.starttime"
+      :item-data="item"
+    />
+    <a-result v-if="!renderList.length" status="404" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { PropType } from "vue";
 import { IpDataSet } from "@/api/list";
+import ChatPhoneItem from "./chat-item-phone.vue";
 
 defineProps({
-  itemData: {
-    type: Object as PropType<IpDataSet>,
+  renderList: {
+    type: Array as PropType<IpDataSet[]>,
     default() {
-      return {};
+      return [];
     },
   },
 });
@@ -77,7 +64,7 @@ defineProps({
   }
 
   &-collected {
-    .chat-item-actions-collect {
+    .message-item-actions-collect {
       color: rgb(var(--gold-6));
     }
   }
@@ -85,7 +72,7 @@ defineProps({
   &:hover {
     background-color: rgb(var(--gray-2));
 
-    .chat-item-actions {
+    .message-item-actions {
       opacity: 1;
     }
   }

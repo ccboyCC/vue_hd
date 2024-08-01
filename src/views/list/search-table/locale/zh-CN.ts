@@ -4,6 +4,8 @@ export default {
   'searchTable.form.dstip.placeholder': '请输入DSTIP',
   'searchTable.form.srcip': 'srcip',
   'searchTable.form.srcip.placeholder': '请输入SRCIP',
+  'searchTable.form.phonenum': '手机号',
+  'searchTable.form.phonenum.placeholder': '详细手机号码填写',
   'searchTable.form.contentType': '内容体裁',
   'searchTable.form.contentType.img': '图文',
   'searchTable.form.contentType.horizontalVideo': '横版短视频',
@@ -28,11 +30,12 @@ export default {
   'searchTable.operation.import': '批量导入',
   'searchTable.operation.download': '下载',
 
-
   // columns
-  'searchTable.columns.index': 'ID',
+  'searchTable.columns.phone': '手机号',
   'searchTable.columns.freq': 'FREQ',
+  'searchTable.columns.imsi': 'IMSI',
   'searchTable.columns.pci': 'PCI',
+  'searchTable.columns.cid': 'CID',
   'searchTable.columns.tmsi': 'TMSI',
   'searchTable.columns.rnti': 'RNTI',
   'searchTable.columns.dstip': 'DSTIP',

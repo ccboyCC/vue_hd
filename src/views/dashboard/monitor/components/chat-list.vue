@@ -1,23 +1,27 @@
 <template>
   <div class="chat-list">
-    <ChatItem v-for="item in renderList" :key="item.id" :item-data="item" />
+    <ChatItem
+      v-for="item in renderList"
+      :key="item.starttime"
+      :item-data="item"
+    />
     <a-result v-if="!renderList.length" status="404" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { PropType } from 'vue'
-import { ChatRecord } from '@/api/message'
-import ChatItem from './chat-item.vue'
+import { PropType } from "vue";
+import { IpDataSet } from "@/api/list";
+import ChatItem from "./chat-item.vue";
 
 defineProps({
   renderList: {
-    type: Array as PropType<ChatRecord[]>,
+    type: Array as PropType<IpDataSet[]>,
     default() {
-      return []
+      return [];
     },
   },
-})
+});
 </script>
 
 <style scoped lang="less">

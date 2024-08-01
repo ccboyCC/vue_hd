@@ -3,20 +3,17 @@ import axios from 'axios'
 import qs from 'query-string'
 
 export interface IpDataSet {
+  id: number
+  imsi: number
   tac: number
   cid: number
   tmsi: number
   rnti: number
   srcip: string
   dstip: string
-  starttime: number
-  endtime: number
+  timestamp: number
+  phonenum: string
 }
-
-export interface allsize {
-  allsize: number
-}
-
 
 export interface PolicyIpForm {
   pageNo: number
@@ -29,9 +26,22 @@ export interface PolicyIpForm {
   dstip: string
   starttime: number
   endtime: number
+  phonenum: string
+  isphonenum: number
 }
 
 
+
+export function queryIpListSize() {
+  console.log('数据读取')
+  return axios.post('air/searchlatest')
+}
+
+
+export function queryPhoneNumSize() {
+  console.log('phonenum数据读取')
+  return axios.post('air/searchPhoneNum')
+}
 
 
 
