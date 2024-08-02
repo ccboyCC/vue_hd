@@ -1,10 +1,5 @@
 <template>
-  <div
-    :class="[
-      'chat-item-phone',
-      itemData.isCollect ? 'chat-item-phone-collected' : '',
-    ]"
-  >
+  <div :class="['chat-item-phone']">
     <a-space :size="4" direction="vertical" fill>
       <a-typography-text type="warning">
         {{ "手机：" }}{{ itemData.phonenum }}

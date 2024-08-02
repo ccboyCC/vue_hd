@@ -2,7 +2,7 @@
   <div class="chat-list-phone">
     <ChatPhoneItem
       v-for="item in renderList"
-      :key="item.starttime"
+      :key="item.id"
       :item-data="item"
     />
     <a-result v-if="!renderList.length" status="404" />

@@ -187,7 +187,6 @@
         :showPagination="true"
         :columns="cloneColumns as TableColumnData[]"
         :data="renderIpData"
-        :column-resizable
         :bordered="true"
         :size="size"
         @page-change="onPageChange"
@@ -215,6 +214,7 @@ import {
   watch,
 } from "vue";
 import { useI18n } from "vue-i18n";
+import { number } from "echarts/core";
 
 type SizeProps = "mini" | "small" | "medium" | "large";
 type Column = TableColumnData & { checked?: true };
@@ -226,9 +226,9 @@ const searchQueryAll = ref();
 
 const valueFind = ref("");
 
-const intervalId = ref(null);
+const intervalId = ref();
 
-const startPolling = (interval = 1500) => {
+const startPolling = (interval = 3000) => {
   intervalId.value = setInterval(() => {
     search();
   }, interval);
@@ -244,7 +244,22 @@ const stopPolling = () => {
 onMounted(startPolling);
 onUnmounted(stopPolling);
 
-const generateFormModel = () => {
+interface FormModel {
+  pageNo: number;
+  pageSize: number;
+  tac?: number;
+  cid?: number;
+  tmsi?: number;
+  rnti?: number;
+  srcip?: string;
+  dstip?: string;
+  starttime?: number;
+  endtime?: number;
+  isphonenum: number;
+  phonenum?: string; // Allowing undefined and string
+}
+
+const generateFormModel = (): FormModel => {
   return {
     pageNo: 1,
     pageSize: 50,
@@ -263,7 +278,7 @@ const generateFormModel = () => {
 const { loading, setLoading } = useLoading(true);
 const { t } = useI18n();
 const renderIpData = ref<IpDataSet[]>([]);
-const formModel = ref(generateFormModel());
+const formModel = ref<FormModel>(generateFormModel());
 const cloneColumns = ref<Column[]>([]);
 const showColumns = ref<Column[]>([]);
 const size = ref<SizeProps>("medium");
@@ -280,7 +295,7 @@ const basePagination: Pagination = {
   dstip: undefined,
   starttime: undefined,
   endtime: undefined,
-  isphonenum: 0,
+  isphonenum: undefined,
   phonenum: undefined,
 };
 const pagination = reactive({
@@ -373,7 +388,7 @@ const fetchDataIp = async (
       item.timestamp = formatDate(item.timestamp);
     });
     renderIpData.value = data.ipDataSet;
-    pagination.current = params.pageNo;
+    pagination.pageNo = params.pageNo;
     pagination.total = data.allsize;
   } catch (err) {
     // you can report use errorHandler or other
@@ -437,7 +452,7 @@ const search = () => {
   }
   if (isCheckePhone.value) {
     formModel.value.isphonenum = 1;
-    if (phone.value != null) {
+    if (phone.value != null && phone.value !== "") {
       formModel.value.phonenum = `+86${phone.value}`;
     }
   } else {

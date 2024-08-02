@@ -18,16 +18,16 @@ export interface IpDataSet {
 export interface PolicyIpForm {
   pageNo: number
   pageSize: number
-  tac: number
-  cid: number
-  tmsi: number
-  rnti: number
-  srcip: string
-  dstip: string
-  starttime: number
-  endtime: number
-  phonenum: string
-  isphonenum: number
+  tac?: number
+  cid?: number
+  tmsi?: number
+  rnti?: number
+  srcip?: string
+  dstip?: string
+  starttime?: number
+  endtime?: number
+  phonenum?: string
+  isphonenum?: number
 }
 
 

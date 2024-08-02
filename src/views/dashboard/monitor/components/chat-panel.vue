@@ -19,7 +19,7 @@
       </a-select>
     </a-space>
     <div class="chat-panel-content">
-      <a-spin :loading="loading" style="width: 100%">
+      <a-spin style="width: 100%">
         <ChatList :render-list="ipData" />
       </a-spin>
     </div>
@@ -29,7 +29,6 @@
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref } from "vue";
 import { IpDataSet, PolicyIpForm, queryIpList } from "@/api/list";
-import useLoading from "@/hooks/loading";
 import ChatList from "./chat-list.vue";
 
 const formatDate = (timestamp: string) => {
@@ -63,8 +62,8 @@ const fetchData = async (
     // you can report use errorHandler or other
   }
 };
-const intervalId = ref(null);
-const startPolling = (interval = 2000) => {
+const intervalId = ref();
+const startPolling = (interval = 3000) => {
   intervalId.value = setInterval(() => {
     fetchData();
   }, interval);

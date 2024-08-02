@@ -3,7 +3,7 @@
     <div class="banner-inner">
       <a-carousel class="carousel" animation-name="fade">
         <a-carousel-item v-for="item in carouselItem" :key="item.image">
-          <div :key="item.slogan" class="carousel-item">
+          <div :key="item.image" class="carousel-item">
             <img class="carousel-image" :src="item.image" />
           </div>
         </a-carousel-item>
